@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Инженер: Серверная станция</title>
+    <style>
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            overflow: hidden; background-color: #1a1a1a; 
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* Оболочка, которая держит пропорции картинки */
+        #game-wrapper {
+            position: relative;
+            width: 100vw;
+            height: 56.25vw; /* Соотношение 16:9 */
+            max-height: 100vh;
+            max-width: 177.78vh;
+            background: url('neon_server.jpg') no-repeat center center;
+            background-size: contain;
+            box-shadow: 0 0 50px #000;
+        }
+
+        /* Кнопка "Начать заново" - теперь она точно в углу */
+        #reset-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 999; /* Поверх всех элементов */
+            display: none; /* Появится в конце */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        #reset-btn:hover { background: #ff6666; }
+
+        /* Точки разрывов */
+        .break-point {
+            position: absolute;
+            width: 4%;  /* Размер зависит от ширины поля */
+            height: 7%; /* Размер зависит от высоты поля */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2vw; 
+            z-index: 10;
+            animation: spark 0.5s infinite alternate;
+        }
+
+        @keyframes spark {
+            from { opacity: 1; filter: drop-shadow(0 0 5px red); }
+            to { opacity: 0.5; filter: drop-shadow(0 0 15px yellow); }
+        }
+
+        .fixed {
+            animation: none !important;
+            color: #00ff00 !important;
+            filter: drop-shadow(0 0 10px #00ff00) !important;
+            pointer-events: none;
+        }
+
+        /* Информационная панель */
+        #status-bar {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: #00d4ff;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-size: 1.5vw;
+            border: 2px solid #00d4ff;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-wrapper" id="main-area">
+        <button id="reset-btn" onclick="location.reload()">Начать заново 🔄</button>
+        
+        <div id="status-bar">Инженер, найди 5 обрывов! 🛠️</div>
+
+        <div class="break-point" style="top: 71%; left: 51%;" onclick="repair(this)">⚡</div>
+        
+        <div class="break-point" style="top: 57%; left: 19%;" onclick="repair(this)">⚡</div>
+        
+        <div class="break-point" style="top: 40%; left: 70%;" onclick="repair(this)">⚡</div>
+
+        <div class="break-point" style="top: 13%; left: 37%;" onclick="repair(this)">⚡</div>
+
+        <div class="break-point" style="top: 41%; left: 51%;" onclick="repair(this)">⚡</div>
+    </div>
+
+    <script>
+        let count = 0;
+        function repair(el) {
+            if (!el.classList.contains('fixed')) {
+                el.classList.add('fixed');
+                el.innerHTML = "✅";
+                count++;
+                
+                const status = document.getElementById('status-bar');
+                if (count === 5) {
+                    status.innerHTML = "СВЯЗЬ ВОССТАНОВЛЕНА! 🎉";
+                    status.style.color = "#00ff00";
+                    document.getElementById('reset-btn').style.display = "block";
+                } else {
+                    status.innerHTML = `Починено: ${count} из 5`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
