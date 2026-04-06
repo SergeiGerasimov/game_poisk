@@ -107,14 +107,33 @@
 
     <script>
         let count = 0;
-        function repair(el) {
+        let isMusicPlaying = false;
+        
+    function repair(el) {
+            // Запуск фоновой музыки при первом клике (требование браузеров)
+            if (!isMusicPlaying) {
+                const bgMusic = document.getElementById('bg-music');
+                bgMusic.volume = 0.3; // Громкость фона 30%
+                bgMusic.play().catch(e => console.log("Музыка ждет взаимодействия"));
+                isMusicPlaying = true;
+            }
+
             if (!el.classList.contains('fixed')) {
+                // Звук клика
+                const clickSound = document.getElementById('sfx-click');
+                clickSound.currentTime = 0; // Сброс времени, чтобы можно было кликать быстро
+                clickSound.play();
+
                 el.classList.add('fixed');
                 el.innerHTML = "✅";
                 count++;
                 
                 const status = document.getElementById('status-bar');
                 if (count === 5) {
+                    // Останавливаем фон и включаем победу
+                    document.getElementById('bg-music').pause();
+                    document.getElementById('sfx-victory').play();
+
                     status.innerHTML = "СВЯЗЬ ВОССТАНОВЛЕНА! 🎉";
                     status.style.color = "#00ff00";
                     document.getElementById('reset-btn').style.display = "block";
